@@ -12,8 +12,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Door Frame
+    second: {fileID: 2100000, guid: f655a7061e949ae45b53f8fed2326d19, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Floor
-    second: {fileID: 2100000, guid: e8e0e3872421cc240bb11ce554b74307, type: 2}
+    second: {fileID: 2100000, guid: b141450d6d90d2543a8988a56232f4e3, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
