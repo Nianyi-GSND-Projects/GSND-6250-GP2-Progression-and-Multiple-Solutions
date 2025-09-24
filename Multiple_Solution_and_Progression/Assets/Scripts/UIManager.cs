@@ -41,6 +41,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        if (UIManager.Instance != null)
+        {
+            StartCoroutine(OpenSceneMonologue());
+        }
+    }
+    private IEnumerator OpenSceneMonologue()
+    {
+        UIManager.Instance.ShowMonologue("I must find a way to Principal's Office and falsify my grades, or else I'll be expelled!");
+        yield return new WaitForSeconds(UIManager.Instance.displaytime + 1.0f);
+        UIManager.Instance.ShowMonologue("It seems that nobody is here now. This my only chance.");
+    }
     public void ShowNotification(string message)
     {
         if (notificationCoroutine != null)

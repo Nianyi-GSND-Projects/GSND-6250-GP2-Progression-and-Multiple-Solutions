@@ -58,6 +58,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2067898042686239572, guid: 0e3a496634e37fd49aa0d737519f4e80,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5706491067878949420, guid: 0e3a496634e37fd49aa0d737519f4e80,
         type: 3}
       propertyPath: m_Size.x
@@ -67,6 +72,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Exterior_wall-3mx6m
+      objectReference: {fileID: 0}
+    - target: {fileID: 5755720396254290031, guid: 0e3a496634e37fd49aa0d737519f4e80,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 127
       objectReference: {fileID: 0}
     - target: {fileID: 7632684240971025279, guid: 0e3a496634e37fd49aa0d737519f4e80,
         type: 3}
