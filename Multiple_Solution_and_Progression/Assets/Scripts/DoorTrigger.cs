@@ -13,13 +13,14 @@ public class DoorTrigger : MonoBehaviour
 
     [Header("Interaction Settings")]
     public LockType currentLockType = LockType.Unlocked;
-    public string correctPassword = "1234";
+    public string correctPassword = "12345678";
 
     [Header("UI Settings")]
     public string openPrompt = "Press F to Close";
     public string closedPrompt = "Press F to Open";
-    public string needsKeyPrompt = "Locked"; 
+    public string needsKeyPrompt = "Locked";
     public string needsPasswordPrompt = "Press F to Enter Password";
+    public string HammerPrompt = "Press E to Apply Physical Solution";
 
     [Header("Events for Linked Doors")]
     public UnityEvent OnDoorToggle;
@@ -29,7 +30,7 @@ public class DoorTrigger : MonoBehaviour
 
     private Quaternion openRotation;
 
-    private bool isOpen = false;
+    public bool isOpen = false;
 
 
     void Start()
@@ -41,8 +42,41 @@ public class DoorTrigger : MonoBehaviour
     void Update()
     {
         Quaternion targetRotation = isOpen ? openRotation : closedRotation;
-
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * animationSpeed);
+    }
+
+    public void subInteract(PlayerInventory playerInventory)
+    {
+        if (currentLockType == LockType.PasswordLocked && playerInventory.hasHammer)
+        {
+            ForceUnlock();
+            ToggleDoorState();
+        }
+    }
+
+    public void Interact(PlayerInventory playerInventory)
+    {
+        switch (currentLockType)
+        {
+            case LockType.Unlocked:
+                ToggleDoorState();
+                break;
+            case LockType.KeyLocked:
+                if (playerInventory.hasKeyChain)
+                {
+                    UnlockWithKey();
+                }
+                else
+                {
+                    UIManager.Instance.ShowNotification("The door is locked. I need a key.");
+                }
+                break;
+            case LockType.PasswordLocked:
+                UIManager.Instance.ShowPasswordUI(this);
+                break;
+            default:
+                break;
+        }
     }
 
     public void ToggleDoorState()
@@ -52,7 +86,7 @@ public class DoorTrigger : MonoBehaviour
         UpdateInteractionPromptOnStateChange();
         OnDoorToggle.Invoke();
     }
-    
+
     public void ForceUnlock()
     {
         currentLockType = LockType.Unlocked;
@@ -61,8 +95,8 @@ public class DoorTrigger : MonoBehaviour
     {
         if (currentLockType == LockType.KeyLocked)
         {
-            ForceUnlock(); 
-            OnUnlock.Invoke(); 
+            ForceUnlock();
+            OnUnlock.Invoke();
             UIManager.Instance.ShowNotification("Unlocked with key");
             ToggleDoorState();
         }
@@ -74,16 +108,20 @@ public class DoorTrigger : MonoBehaviour
         {
             currentLockType = LockType.Unlocked;
             UIManager.Instance.ShowNotification("Access Granted");
-            ToggleDoorState(); 
+            ToggleDoorState();
             return true;
         }
         UIManager.Instance.ShowNotification("Wrong Password");
         return false;
     }
 
-    public void ShowInteractionPrompt()
+    public void ShowInteractionPrompt(PlayerInventory playerInventory)
     {
         string prompt = GetCurrentPromptText();
+        if(currentLockType == LockType.PasswordLocked && playerInventory.hasHammer)
+        {
+            prompt += " / " + HammerPrompt;
+        }
         UIManager.Instance.ShowInteractionPrompt(prompt);
     }
 
@@ -92,9 +130,9 @@ public class DoorTrigger : MonoBehaviour
         UIManager.Instance.HideInteractionPrompt();
     }
 
-    private void UpdateInteractionPromptOnStateChange()
+    private void UpdateInteractionPromptOnStateChange(PlayerInventory playerInventory = null)
     {
-        ShowInteractionPrompt();
+        ShowInteractionPrompt(playerInventory);
     }
     private string GetCurrentPromptText()
     {
@@ -107,8 +145,8 @@ public class DoorTrigger : MonoBehaviour
             case LockType.PasswordLocked:
                 return needsPasswordPrompt;
             default:
-                return ""; 
+                return "";
         }
     }
-
+    
 }
